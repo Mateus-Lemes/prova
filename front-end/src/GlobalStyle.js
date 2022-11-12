@@ -50,11 +50,18 @@ const GlobalStyle = createGlobalStyle`
         border-spacing: 0;
     }
 
+    a {
+        color: purple;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
     .root {
         background-color: #1c0c3f;
-        width:100vw;
-        height:105vh;
+        width: 100vw;
+        height:100vh;
         font-family: 'Poppins', sans-serif;
+        overflow-x: hidden;
     }
 
     * {
