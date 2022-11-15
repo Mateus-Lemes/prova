@@ -1,11 +1,12 @@
 import styled from "styled-components";
+import Header from "../Components/Header";
 
 export default function Home() {
     return (
         <HomeStyled>
-            <header>
+            <Header>
                 <h1>MÓDULOS</h1>
-            </header>
+            </Header>
             <section>    
                 <article>
                     <div>
@@ -47,23 +48,14 @@ export default function Home() {
 
 const HomeStyled = styled.main`
 
-
-header {
-    position: fixed;
-    top: 0;
-    background-color: white;
-    width: 100vw;
+h1 {
+    font-size: 50px;
     height: 100px;
-    z-index: 1;
-
-    h1 {
-        font-size: 50px;
-        height: 100px;
-        line-height: 100px;
-        text-align: center;
-        color: gray;
-    }
+    line-height: 100px;
+    text-align: center;
+    color: gray;
 }
+
 section {
     padding-top: 100px;
     display: flex;

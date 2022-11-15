@@ -1,21 +1,60 @@
 import styled from "styled-components"
-import { Link } from "react-router-dom"
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom"
+import { useState, useContext } from "react";
 import 'animate.css';
+import axios from "axios";
+import userContext from "../Context/userContext";
+import Swal from 'sweetalert2'
 
-export default function Login() {
-    const [admin, setAdmin] = useState("");
+export default function LoginPage() {
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const object = useContext(userContext);
+    const navigate = useNavigate()
 
+    const body = {
+        username,
+        password
+    }
 
+    function Login(e) {
+        e.preventDefault();
+
+        const promise = axios.post("http://localhost:4000/login", body);
+        promise.then((res) => {
+            const token = res.data
+            object.setToken(token);
+            localStorage.setItem("token", token);
+            navigate("/config");
+            
+        })
+        
+
+        promise.catch(() => {
+            let timerInterval
+            Swal.fire({
+            title: 'Usuário ou senha inválido',
+            html: 'verifique se não há nenhum erro de escrita em seu login e senha e tente novamente',
+            timer: 7000,
+            timerProgressBar: true,
+
+            didOpen: () => {
+                Swal.showLoading()
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+            })})
+            // alert("Email e/ou senha inválido(s), tente novamente!")});
+    }
     return (
         <LoginStyled>
             <h1 class="animate__animated animate__pulse animate__infinite infinite">Prova Verzel</h1>
             <div>
                 <form onSubmit={Login}>
-                    <input type="string" placeholder='Admin' value = {admin} onChange={(e) => setAdmin(e.target.value)} required/>
+                    <input type="string" placeholder='Admin' value = {username} onChange={(e) => setUsername(e.target.value)} required/>
                     <input type="password" placeholder='Senha' value = {password} onChange={(e) => setPassword(e.target.value)} required/>
-                    <button>Entrar</button>
+                    <button type="submit">Entrar</button>
                 </form>
                 <p>Você não é Admin? <br/><Link to="/home">Login de usuário</Link></p>
             </div>
