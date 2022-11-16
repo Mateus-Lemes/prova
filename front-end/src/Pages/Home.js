@@ -1,60 +1,63 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Header from "../Components/Header";
+import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 export default function Home() {
+    const [modules, setModules] = useState([])
+
+    useEffect(()=> {
+        const required = axios.get("http://localhost:4000/modulesNoAuth");
+        required.then((response) => {
+        setModules(response.data)
+        console.log(response.data)
+        
+        })
+        required.catch(() => {
+            let timerInterval
+            Swal.fire({
+            title: 'Erro no Servidor',
+            html: 'Verifique se há erro na internet ou algo semelhante e tente novamente',
+            timer: 99999,
+            timerProgressBar: true,
+
+            didOpen: () => {
+                Swal.showLoading()
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+            })
+        }) // eslint-disable-next-line
+    }, [])
     return (
         <HomeStyled>
             <Header>
                 <h1>MÓDULOS</h1>
+                <Link to="/admin/login"><p>login de administrador</p></Link>
             </Header>
-            <section>    
-                <article>
-                    <div>
-                        <h2>Primeiro Módulo</h2>
-                        <h3> 4 <br/> aulas </h3>
-                    </div>
-                    <p>sdhusf sfsdjfskdf dsfjsbdfsd jkfdsdbfj sdjkfbsd</p>
-                    <div className="button">
-                        <p>ir para módulo </p>
-                        <ion-icon name="arrow-forward-outline"></ion-icon>
-                    </div>
-                </article>
-                <article>
-                    <div>
-                        <h2>Primeiro Módulo</h2>
-                        <h3> 4 <br/> aulas </h3>
-                    </div>
-                    <p>sdhusf sfsdjfskdf dsfjsbdfsd jkfdsdbfj sdjkfbsd</p>
-                    <div className="button">
-                        <p>ir para módulo </p>
-                        <ion-icon name="arrow-forward-outline"></ion-icon>
-                    </div>
-                </article>
-                <article>
-                    <div>
-                        <h2>Primeiro Módulo</h2>
-                        <h3> 4 <br/> aulas </h3>
-                    </div>
-                    <p>sdhusf sfsdjfskdf dsfjsbdfsd jkfdsdbfj sdjkfbsd</p>
-                    <div className="button">
-                        <p>ir para módulo </p>
-                        <ion-icon name="arrow-forward-outline"></ion-icon>
-                    </div>
-                </article>
+            <section>
+                {modules.map((module)=>{
+                   const {id, name, classes} = module
+                    return <article key={id}>
+                                <div>
+                                    <h2>{name}</h2>
+                                    <h3> {classes.length} <br/> aula(s)</h3>
+                                </div>
+                                <div className="button">
+                                    <p>ir para módulo </p>
+                                    <ion-icon name="arrow-forward-outline"></ion-icon>
+                                </div>
+                            </article>
+                })}    
             </section>
         </HomeStyled>
     )
 }
 
 const HomeStyled = styled.main`
-
-h1 {
-    font-size: 50px;
-    height: 100px;
-    line-height: 100px;
-    text-align: center;
-    color: gray;
-}
 
 section {
     padding-top: 100px;
@@ -69,7 +72,7 @@ section {
 article {
     margin: 50px 0;
     width: 312px;
-    height: 300px;
+    height: 180px;
     background-color: rgb(36, 18, 75);
     border: 1px solid rgb(94, 73, 255);
     border-radius: 15px;
@@ -92,14 +95,6 @@ article {
         }
     }
 
-    p {
-        width: 262px;
-        height: 104px;
-        color: #f0f5ff;
-        font-size: 16px;
-        padding: 20px 0 16px 0;
-    }
-
     .button {
         bottom: 24px;
         position: absolute;
@@ -116,6 +111,8 @@ article {
             padding: 0;
             line-height: 56px;
             text-align: center;
+            color: #f0f5ff;
+            font-size: 16px;
         }
 
         ion-icon {

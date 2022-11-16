@@ -1,21 +1,56 @@
 // import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../Components/Header";
+import userContext from "../Context/userContext";
+import Swal from "sweetalert2";
+import axios from "axios";
 
 export default function ConfigModulesAndClasses() {
+    const {headers} = useContext(userContext);
+    const [modules, setModules] = useState([])
+
+    useEffect(()=> {
+        const required = axios.get("http://localhost:4000/modules", headers);
+        required.then((response) => {
+        setModules(response.data)
+        console.log(response.data)
+        
+        })
+        required.catch(() => {
+            let timerInterval
+            Swal.fire({
+            title: 'Erro no Servidor',
+            html: 'Verifique se há erro na internet ou algo semelhante e tente novamente',
+            timer: 99999,
+            timerProgressBar: true,
+
+            didOpen: () => {
+                Swal.showLoading()
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+            })
+        }) // eslint-disable-next-line
+    }, [])
+
     return (
         <ConfigStyled>
             <Header>
                 <h1>CONFIGURAÇÕES</h1>
             </Header>
             <section>
-                <article>
-                    <h2>nome do módulo</h2>
-                    <h3>nome da aula</h3>
-                    <h3>nome da aula</h3>
-                    <h3>nome da aula</h3>
-                </article>
+                {modules.map((module)=> {
+                    const {id, name} = module
+                    return <article>
+                                <h2 key={id}>{name}</h2>
+                                <h3>nome da aula</h3>
+                                <h3>nome da aula</h3>
+                                <h3>nome da aula</h3>
+                            </article>
+                })}
                 <article>
                     <h2>nome do módulo</h2>
                     <h3>nome da aula</h3>
