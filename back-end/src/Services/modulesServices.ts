@@ -1,4 +1,4 @@
-import { createModule, createModules, findModuleByName } from "../Repositories/modulesRepositories.js";
+import { createModule, createModules, findModuleByName, getModules } from "../Repositories/modulesRepositories.js";
 
 export async function createModulesService(body: createModule) {
 
@@ -12,4 +12,16 @@ export async function createModulesService(body: createModule) {
     }
 
     await createModules(body)
+}
+
+export async function getModulesService() {
+    const allModules = await getModules();
+
+    return allModules
+}
+
+export async function getModulesNoAuthService() {
+    const allModules = await getModules();
+
+    return allModules
 }

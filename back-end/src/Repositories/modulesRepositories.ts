@@ -19,3 +19,29 @@ export async function findModuleByName(name: string) {
 
     return existModule;
 }
+
+export async function getModules() {
+    const allModules = await prisma.modules.findMany({
+        where: {},
+        orderBy: {
+            name: "asc"
+        },
+        select:{
+            id: true,
+            name: true,
+            classes: {
+                orderBy: {
+                    name: "asc"
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    date: true,
+                }
+            }
+
+        }
+    })
+
+    return allModules;
+}
